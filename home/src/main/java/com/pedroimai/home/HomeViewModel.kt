@@ -1,10 +1,10 @@
-package com.pedroimai.sandbox.ui.main
+package com.pedroimai.home
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor() : ViewModel() {
+class HomeViewModel @Inject constructor() : ViewModel() {
     // TODO: Implement the ViewModel
 }
