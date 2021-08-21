@@ -55,6 +55,10 @@ dependencies {
     implementation(Dependencies.ktx.livedata)
     implementation(Dependencies.ktx.viewmodel)
 
+    //navigation
+    implementation(Dependencies.navigation.fragment)
+    implementation(Dependencies.navigation.ui)
+
     //hilt
     implementation(Dependencies.hilt.core)
     kapt(Dependencies.hilt.compiler)

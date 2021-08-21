@@ -11,6 +11,7 @@ object Versions {
         const val livedata = "2.3.1"
         const val viewmodel = "2.3.1"
     }
+    const val navigation = "2.3.5"
     const val hilt = "2.38.1"
     const val junit = "4.13.2"
     const val androidJunit = "1.1.3"

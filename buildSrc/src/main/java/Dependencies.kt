@@ -18,6 +18,14 @@ object Dependencies {
         const val compiler = "com.google.dagger:hilt-compiler:${Versions.hilt}"
     }
 
+    // Kotlin
+    object navigation {
+        const val fragment = "androidx.navigation:navigation-fragment-ktx:${Versions.navigation}"
+        const val ui = "androidx.navigation:navigation-ui-ktx:${Versions.navigation}"
+        const val dynamic = "androidx.navigation:navigation-dynamic-features-fragment:${Versions.navigation}"
+        const val testing = "androidx.navigation:navigation-testing:${Versions.navigation}"
+    }
+
     object test {
         const val junit = "junit:junit:${Versions.junit}"
         const val androidJunit = "androidx.test.ext:junit:${Versions.androidJunit}"
