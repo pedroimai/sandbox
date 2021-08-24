@@ -1,39 +1,24 @@
 plugins {
-    id("com.android.application")
+    id("com.android.library")
     kotlin("android")
     id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
-    id("androidx.navigation.safeargs")
+    id("kotlin-android")
 }
 
 android {
     compileSdkVersion(Env.compileSdkVersion)
     buildToolsVersion(Env.buildToolsVersion)
 
-    defaultConfig {
-        applicationId = "com.pedroimai.sandbox"
-        minSdkVersion(Env.minSdkVersion)
-        targetSdkVersion(Env.targetSdkVersion)
-        versionCode = Env.Build.versionCode
-        versionName = Env.Build.versionName
-
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
-
     buildFeatures {
         viewBinding = true
     }
 
-    buildTypes {
-        getByName("release") {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
+    defaultConfig {
+        minSdkVersion(Env.minSdkVersion)
+        targetSdkVersion(Env.targetSdkVersion)
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -60,18 +45,14 @@ dependencies {
     implementation(Dependencies.ktx.livedata)
     implementation(Dependencies.ktx.viewmodel)
 
-    //navigation
-    implementation(Dependencies.navigation.fragment)
-    implementation(Dependencies.navigation.ui)
-
     //hilt
     implementation(Dependencies.hilt.core)
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:${rootProject.extra["kotlin_version"]}")
+    implementation("androidx.legacy:legacy-support-v4:1.0.0")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.3.1")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
     kapt(Dependencies.hilt.compiler)
     testImplementation(Dependencies.test.junit)
     androidTestImplementation(Dependencies.test.androidJunit)
     androidTestImplementation(Dependencies.test.espresso)
-
-    //modules
-    implementation(project(Dependencies.modules.characters))
-    implementation(project(Dependencies.modules.home))
 }

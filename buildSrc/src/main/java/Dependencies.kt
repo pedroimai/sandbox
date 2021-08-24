@@ -33,6 +33,7 @@ object Dependencies {
     }
 
     object modules {
+        const val characters = ":characters"
         const val home = ":home"
     }
 }
