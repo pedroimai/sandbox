@@ -6,12 +6,12 @@ plugins {
 }
 
 android {
-    compileSdkVersion(Env.compileSdkVersion)
-    buildToolsVersion(Env.buildToolsVersion)
+    compileSdk = Env.compileSdkVersion
+    buildToolsVersion = Env.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion(Env.minSdkVersion)
-        targetSdkVersion(Env.targetSdkVersion)
+        minSdk = Env.minSdkVersion
+        targetSdk = Env.targetSdkVersion
     }
 
     compileOptions {

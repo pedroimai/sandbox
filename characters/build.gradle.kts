@@ -7,16 +7,16 @@ plugins {
 }
 
 android {
-    compileSdkVersion(Env.compileSdkVersion)
-    buildToolsVersion(Env.buildToolsVersion)
+    compileSdk = Env.compileSdkVersion
+    buildToolsVersion = Env.buildToolsVersion
 
     buildFeatures {
         viewBinding = true
     }
 
     defaultConfig {
-        minSdkVersion(Env.minSdkVersion)
-        targetSdkVersion(Env.targetSdkVersion)
+        minSdk = Env.minSdkVersion
+        targetSdk = Env.targetSdkVersion
     }
 
     compileOptions {
@@ -47,12 +47,10 @@ dependencies {
 
     //hilt
     implementation(Dependencies.hilt.core)
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:${rootProject.extra["kotlin_version"]}")
-    implementation("androidx.legacy:legacy-support-v4:1.0.0")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.3.1")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
     kapt(Dependencies.hilt.compiler)
     testImplementation(Dependencies.test.junit)
     androidTestImplementation(Dependencies.test.androidJunit)
     androidTestImplementation(Dependencies.test.espresso)
+
+    implementation(project(Dependencies.modules.shared))
 }
