@@ -10,7 +10,7 @@ plugins {
 version = "1.0"
 val coroutinesVersion = "1.5.0-native-mt"
 val serializationVersion = "1.2.2"
-val ktorVersion = "1.6.1"
+val ktorVersion = "1.6.7"
 val kryptoVersion = "2.2.0"
 val datetimeVersion = "0.3.0"
 
