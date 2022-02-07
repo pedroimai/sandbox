@@ -35,6 +35,24 @@ class CharactersListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.rvCharacters.adapter = adapter
-        adapter.submitList(viewModel.getCharacters())
+        binding.btnRetry.setOnClickListener {
+            fetch()
+        }
+    }
+
+    private fun fetch() {
+        viewModel.characters.observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is Result.Loading -> {
+                    Toast.makeText(context, "loading", Toast.LENGTH_SHORT).show()
+                }
+                is Result.Failed -> {
+                    Toast.makeText(context, result.error.message, Toast.LENGTH_SHORT).show()
+                }
+                is Result.Success -> {
+                    adapter.submitList(result.data.characters)
+                }
+            }
+        }
     }
 }
