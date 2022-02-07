@@ -12,6 +12,7 @@ val coroutinesVersion = "1.5.0-native-mt"
 val serializationVersion = "1.2.2"
 val ktorVersion = "1.6.1"
 val kryptoVersion = "2.2.0"
+val datetimeVersion = "0.3.0"
 
 kotlin {
     android()
@@ -40,6 +41,7 @@ kotlin {
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
                 implementation("io.ktor:ktor-client-serialization:$ktorVersion")
                 implementation("com.soywiz.korlibs.krypto:krypto:$kryptoVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-datetime:$datetimeVersion")
             }
         }
         val commonTest by getting {
