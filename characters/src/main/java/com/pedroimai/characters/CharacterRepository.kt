@@ -14,12 +14,9 @@ class CharacterRepository @Inject constructor() {
         emit(
             Result.success(marvelApi.getCharacters().data) as Result<CharactersPayload.Characters>
         )
-
     }.onStart {
         emit(Result.loading<CharactersPayload.Characters>() as Result<CharactersPayload.Characters>)
-    }
-        .catch { exception ->
-            emit(Result.failed<CharactersPayload.Characters>(exception) as Result<CharactersPayload.Characters>)
-        }
-        .flowOn(Dispatchers.IO)
+    }.catch { exception ->
+        emit(Result.failed<CharactersPayload.Characters>(exception) as Result<CharactersPayload.Characters>)
+    }.flowOn(Dispatchers.IO)
 }

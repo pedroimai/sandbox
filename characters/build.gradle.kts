@@ -42,8 +42,8 @@ dependencies {
     implementation(Dependencies.ktx.activity)
     implementation(Dependencies.ktx.fragment)
     implementation(Dependencies.ktx.core)
-    implementation(Dependencies.ktx.livedata)
-    implementation(Dependencies.ktx.viewmodel)
+    implementation(Dependencies.ktx.lifecycle.viewmodel)
+    implementation(Dependencies.ktx.lifecycle.runtime)
 
     //hilt
     implementation(Dependencies.hilt.core)

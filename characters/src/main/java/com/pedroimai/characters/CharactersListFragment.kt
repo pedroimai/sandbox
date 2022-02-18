@@ -7,8 +7,13 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.pedroimai.characters.databinding.CharactersListFragmentBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class CharactersListFragment : Fragment() {
@@ -41,16 +46,20 @@ class CharactersListFragment : Fragment() {
     }
 
     private fun fetch() {
-        viewModel.characters.observe(viewLifecycleOwner) { result ->
-            when (result) {
-                is Result.Loading -> {
-                    Toast.makeText(context, "loading", Toast.LENGTH_SHORT).show()
-                }
-                is Result.Failed -> {
-                    Toast.makeText(context, result.error.message, Toast.LENGTH_SHORT).show()
-                }
-                is Result.Success -> {
-                    adapter.submitList(result.data.characters)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect { uiState ->
+                    when (uiState) {
+                        is Result.Loading -> {
+                            Toast.makeText(context, "loading", Toast.LENGTH_SHORT).show()
+                        }
+                        is Result.Failed -> {
+                            Toast.makeText(context, uiState.error.message, Toast.LENGTH_SHORT).show()
+                        }
+                        is Result.Success -> {
+                            adapter.submitList(uiState.data.characters)
+                        }
+                    }
                 }
             }
         }

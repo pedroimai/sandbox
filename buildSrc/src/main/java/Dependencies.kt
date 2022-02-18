@@ -8,9 +8,12 @@ object Dependencies {
         const val activity = "androidx.activity:activity-ktx:${Versions.ktx.activity}"
         const val fragment = "androidx.fragment:fragment-ktx:${Versions.ktx.fragment}"
         const val core = "androidx.core:core-ktx:${Versions.ktx.core}"
-        const val livedata = "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.ktx.livedata}"
-        const val viewmodel = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.ktx.viewmodel}"
 
+        object lifecycle {
+            const val runtime = "androidx.lifecycle:lifecycle-runtime-ktx:${Versions.ktx.lifecycle}"
+            const val viewmodel =
+                "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.ktx.lifecycle}"
+        }
     }
 
     object hilt {
