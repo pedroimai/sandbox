@@ -7,13 +7,13 @@ plugins {
 }
 
 android {
-    compileSdkVersion(Env.compileSdkVersion)
-    buildToolsVersion(Env.buildToolsVersion)
+    compileSdk = Env.compileSdkVersion
+    buildToolsVersion = Env.buildToolsVersion
 
     defaultConfig {
         applicationId = "com.pedroimai.sandbox"
-        minSdkVersion(Env.minSdkVersion)
-        targetSdkVersion(Env.targetSdkVersion)
+        minSdk = Env.minSdkVersion
+        targetSdk = Env.targetSdkVersion
         versionCode = Env.Build.versionCode
         versionName = Env.Build.versionName
 
@@ -35,12 +35,12 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         kotlinOptions {
-            jvmTarget = "1.8"
+            jvmTarget = "11"
         }
     }
 }
