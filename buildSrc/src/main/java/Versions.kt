@@ -1,5 +1,5 @@
 object Versions {
-    const val gradleplugin = "7.1.0"
+    const val gradleplugin = "7.1.1"
     const val kotlin = "1.6.10"
     const val appcompat = "1.3.1"
     const val material = "1.4.0"
