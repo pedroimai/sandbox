@@ -1,7 +1,8 @@
 object Versions {
     const val gradleplugin = "7.1.1"
+    const val depversions = "0.42.0"
     const val kotlin = "1.6.10"
-    const val appcompat = "1.3.1"
+    const val appcompat = "1.4.1"
     const val material = "1.4.0"
     const val constraintlayout = "2.1.0"
     object ktx{
