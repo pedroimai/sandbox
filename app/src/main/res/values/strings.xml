@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Sandbox</string>
+    <string name="menu_title_characters">Characters</string>
+    <string name="menu_title_comics">Comics</string>
 </resources>

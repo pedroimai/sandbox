@@ -37,6 +37,7 @@ object Dependencies {
 
     object modules {
         const val characters = ":characters"
+        const val comics = ":comics"
         const val home = ":home"
         const val shared = ":shared"
     }

@@ -34,6 +34,10 @@ dependencies {
     implementation(Dependencies.kotlin)
     implementation(Dependencies.appcompat)
 
+    //navigation
+    implementation(Dependencies.navigation.fragment)
+    implementation(Dependencies.navigation.ui)
+
     //layout
     implementation(Dependencies.material)
     implementation(Dependencies.constraintlayout)

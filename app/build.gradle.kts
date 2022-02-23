@@ -73,6 +73,7 @@ dependencies {
     androidTestImplementation(Dependencies.test.espresso)
 
     //modules
+    implementation(project(Dependencies.modules.comics))
     implementation(project(Dependencies.modules.characters))
     implementation(project(Dependencies.modules.home))
 }

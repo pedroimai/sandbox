@@ -38,6 +38,10 @@ dependencies {
     implementation(Dependencies.material)
     implementation(Dependencies.constraintlayout)
 
+    //navigation
+    implementation(Dependencies.navigation.fragment)
+    implementation(Dependencies.navigation.ui)
+
     //ktx
     implementation(Dependencies.ktx.activity)
     implementation(Dependencies.ktx.fragment)

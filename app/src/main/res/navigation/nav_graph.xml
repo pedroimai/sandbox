@@ -2,9 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/charactersListFragment">
-    <fragment
-        android:id="@+id/charactersListFragment"
-        android:name="com.pedroimai.characters.CharactersListFragment"
-        android:label="CharactersListFragment" />
+    app:startDestination="@id/comics_nav_graph">
+    <include app:graph="@navigation/comics_nav_graph" />
+    <include app:graph="@navigation/characters_nav_graph" />
 </navigation>
