@@ -21,12 +21,15 @@ class CharactersListViewModel @Inject constructor(private val repository: Charac
     )
     val uiState: StateFlow<Result<CharactersPayload.Characters>> = _uiState
 
-    init {
+    init{
+        fetchOrRetry()
+    }
+
+    fun fetchOrRetry() {
         viewModelScope.launch {
             repository.getCharacters().collect { result ->
                 _uiState.value = result
             }
         }
     }
-
 }

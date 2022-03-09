@@ -41,9 +41,8 @@ class CharactersListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.rvCharacters.adapter = adapter
-        binding.btnRetry.setOnClickListener {
-            fetch()
-        }
+        binding.btnRetry.setOnClickListener { viewModel.fetchOrRetry() }
+        fetch()
     }
 
     private fun fetch() {
@@ -52,13 +51,20 @@ class CharactersListFragment : Fragment() {
                 viewModel.uiState.collect { uiState ->
                     when (uiState) {
                         is Result.Loading -> {
-                            Toast.makeText(context, "loading", Toast.LENGTH_SHORT).show()
+                            binding.loading.visibility = View.VISIBLE
+                            binding.btnRetry.visibility = View.GONE
                         }
                         is Result.Failed -> {
-                            Toast.makeText(context, uiState.error.message, Toast.LENGTH_SHORT).show()
+                            binding.btnRetry.visibility = View.VISIBLE
+                            binding.loading.visibility = View.GONE
+                            Toast.makeText(context, uiState.error.message, Toast.LENGTH_SHORT)
+                                .show()
+
                         }
                         is Result.Success -> {
                             adapter.submitList(uiState.data.characters)
+                            binding.loading.visibility = View.GONE
+                            binding.btnRetry.visibility = View.GONE
                         }
                     }
                 }
