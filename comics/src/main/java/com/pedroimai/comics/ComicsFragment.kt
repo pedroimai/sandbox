@@ -1,31 +1,23 @@
 package com.pedroimai.comics
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.material.Text
+import androidx.compose.ui.platform.ComposeView
+import androidx.fragment.app.Fragment
 
 class ComicsFragment : Fragment() {
-
-    companion object {
-        fun newInstance() = ComicsFragment()
-    }
-
     private lateinit var viewModel: ComicsViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.comics_fragment, container, false)
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(ComicsViewModel::class.java)
-        // TODO: Use the ViewModel
-    }
-
+    ): View =
+        ComposeView(requireContext()).apply {
+            setContent {
+                Text(text = "Comics")
+            }
+        }
 }

@@ -12,6 +12,7 @@ android {
 
     buildFeatures {
         viewBinding = true
+        compose = true
     }
 
     defaultConfig {
@@ -28,6 +29,10 @@ android {
             jvmTarget = "1.8"
         }
     }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.1.1"
+    }
 }
 
 dependencies {
@@ -37,6 +42,14 @@ dependencies {
     //layout
     implementation(Dependencies.material)
     implementation(Dependencies.constraintlayout)
+
+    //compose
+    implementation(Dependencies.compose.activity)
+    implementation(Dependencies.compose.material)
+    implementation(Dependencies.compose.animation)
+    implementation(Dependencies.compose.tooling)
+    implementation(Dependencies.compose.viewModel)
+    androidTestImplementation(Dependencies.compose.uiTest)
 
     //navigation
     implementation(Dependencies.navigation.fragment)

@@ -16,4 +16,9 @@ object Versions {
     const val junit = "4.13.2"
     const val androidJunit = "1.1.3"
     const val espresso = "3.4.0"
+    object compose{
+        const val core = "1.1.1"
+        const val activity = "1.4.0"
+        const val viewModel = "2.4.1"
+    }
 }
