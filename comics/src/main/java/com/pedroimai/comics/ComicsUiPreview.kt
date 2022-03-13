@@ -25,5 +25,10 @@ fun comicsListPreview() {
             )
         )
     )
+}
 
+@Preview(showBackground = true)
+@Composable
+fun LoadingPreview(){
+    Loading()
 }

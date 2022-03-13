@@ -1,13 +1,18 @@
 package com.pedroimai.comics
 
 import android.util.Log
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
@@ -22,7 +27,7 @@ fun ComicsScreen(viewModel: ComicsViewModel) {
         .collectAsState(initial = Result.loading())
 
     when (viewState) {
-        is Result.Loading -> Log.d("comics status", "loading")
+        is Result.Loading -> Loading()
         is Result.Failed -> Log.d("comics status", "error")
         is Result.Success -> ComicsList((viewState as Result.Success<ComicsPayload.Comics>).data)
     }
@@ -36,6 +41,14 @@ fun ComicsList(list: ComicsPayload.Comics) =
         }
     }
 
+@Composable
+fun Loading() =
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator()
+    }
 
 @Composable
 fun <T> rememberFlowWithLifecycle(
