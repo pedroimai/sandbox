@@ -13,6 +13,8 @@ import io.ktor.http.*
 import kotlinx.datetime.Clock
 import kotlinx.serialization.json.Json
 
+const val pageSize = 20
+
 interface MarvelApi {
     suspend fun getComics(): ComicsPayload
     suspend fun getCharacters(): CharactersPayload
@@ -22,13 +24,13 @@ interface MarvelApi {
         override suspend fun getComics(): ComicsPayload =
             client.get {
                 marvel("comics")
-                parameter("limit", 1)
+                parameter("limit", pageSize)
             }
 
         override suspend fun getCharacters(): CharactersPayload =
             client.get {
                 marvel("characters")
-                parameter("limit", 1)
+                parameter("limit", pageSize)
             }
 
         private fun HttpRequestBuilder.marvel(path: String) {
