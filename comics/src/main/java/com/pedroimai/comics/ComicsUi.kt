@@ -1,10 +1,12 @@
 package com.pedroimai.comics
 
-import android.util.Log
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -28,7 +30,7 @@ fun ComicsScreen(viewModel: ComicsViewModel) {
 
     when (viewState) {
         is Result.Loading -> Loading()
-        is Result.Failed -> Log.d("comics status", "error")
+        is Result.Failed -> ErrorScreen(onClick = { viewModel.fetchOrRetry() })
         is Result.Success -> ComicsList((viewState as Result.Success<ComicsPayload.Comics>).data)
     }
 }
@@ -48,6 +50,24 @@ fun Loading() =
         contentAlignment = Alignment.Center
     ) {
         CircularProgressIndicator()
+    }
+
+@Composable
+fun ErrorScreen(
+    title: String = "Algo deu errado",
+    retryButtonText: String = "Tentar Novamente",
+    onClick: () -> Unit = {}
+) =
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(text = title)
+            Button(onClick = onClick) {
+                Text(text = retryButtonText)
+            }
+        }
     }
 
 @Composable

@@ -32,3 +32,9 @@ fun comicsListPreview() {
 fun LoadingPreview(){
     Loading()
 }
+
+@Preview(showBackground = true)
+@Composable
+fun ErrorPreview(){
+    ErrorScreen()
+}
