@@ -1,6 +1,7 @@
 package com.pedroimai.shared.network
 
 import com.pedroimai.shared.domain.CharactersPayload
+import com.pedroimai.shared.domain.ComicsPayload
 import com.soywiz.krypto.MD5
 import com.soywiz.krypto.encoding.ASCII
 import io.ktor.client.*
@@ -13,9 +14,17 @@ import kotlinx.datetime.Clock
 import kotlinx.serialization.json.Json
 
 interface MarvelApi {
+    suspend fun getComics(): ComicsPayload
     suspend fun getCharacters(): CharactersPayload
 
+
     class Impl : MarvelApi {
+        override suspend fun getComics(): ComicsPayload =
+            client.get {
+                marvel("comics")
+                parameter("limit", 1)
+            }
+
         override suspend fun getCharacters(): CharactersPayload =
             client.get {
                 marvel("characters")
