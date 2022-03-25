@@ -1,11 +1,10 @@
 package com.pedroimai.comics
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -19,9 +18,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import com.pedroimai.shared.domain.ComicsPayload
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChanged
 
 data class ComicsScreenModel(val comics: ComicsPayload.Comics)
 
+@ExperimentalMaterialApi
 @Composable
 fun ComicsScreen(viewModel: ComicsViewModel) {
     val viewState by rememberFlowWithLifecycle(viewModel.uiState)
@@ -31,77 +33,75 @@ fun ComicsScreen(viewModel: ComicsViewModel) {
         viewState.loading && viewState.items.isNullOrEmpty() -> Loading()
         //viewState.loading -> ComicsList(viewModel, viewState.items, true)
         viewState.error != null -> ErrorScreen(onClick = { viewModel.fetchOrRetry() })
-        viewState.items.isNullOrEmpty().not() -> ComicsList(viewModel, viewState.items, false)
+        viewState.items.isNullOrEmpty().not() -> ComicsList(
+            viewState.items
+        ) {
+            viewModel.fetchOrRetry()
+        }
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@ExperimentalMaterialApi
 @Composable
 fun ComicsList(
-    viewModel: ComicsViewModel,
-    list: MutableList<ComicsPayload.Comics.ComicModel>,
-    isLoading: Boolean
+    listItems: List<ComicsPayload.Comics.ComicModel>,
+    onLoadMore: () -> Unit
 ) {
+    val listState = rememberLazyListState()
     val context = LocalContext.current
 
-    return InfiniteLoadingList(
-        modifier = Modifier.fillMaxWidth(),
-        items = list,
-        loadMore = {
-            Log.d("pedroca","loading next page")
-            viewModel.fetchOrRetry()
-        },
-    ) { _, item ->
-        val comics = item as ComicsPayload.Comics.ComicModel
-        Surface(onClick = {
-            Toast.makeText(
-                context,
-                "${comics.name} clicked",
-                Toast.LENGTH_SHORT
-            ).show()
-        }) {
-            Text(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp, vertical = 16.dp)
-                    .fillMaxWidth(),
-                fontSize = 16.sp,
-                text = comics.name
-            )
-        }
+    LazyColumn(
+        state = listState
+    ) {
+        items(items = listItems) { comics ->
+            Surface(onClick = {
+                Toast.makeText(
+                    context,
+                    "${comics.name} clicked",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }) {
+                Text(
+                    modifier = Modifier
+                        .padding(horizontal = 8.dp, vertical = 16.dp)
+                        .fillMaxWidth(),
+                    fontSize = 16.sp,
+                    text = comics.name,
+                )
+            }
 
-        if (isLoading) {
-            CircularProgressIndicator()
         }
+    }
+
+    InfiniteListHandler(listState = listState) {
+        onLoadMore()
     }
 }
 
 
 @Composable
-fun InfiniteLoadingList(
-    modifier: Modifier,
-    items: List<Any>,
-    loadMore: () -> Unit,
-    rowContent: @Composable (Int, Any) -> Unit
+fun InfiniteListHandler(
+    listState: LazyListState,
+    buffer: Int = 2,
+    onLoadMore: () -> Unit
 ) {
-    val listState = rememberLazyListState()
-    val firstVisibleIndex = remember { mutableStateOf(listState.firstVisibleItemIndex) }
-    LazyColumn(state = listState, modifier = modifier) {
-        itemsIndexed(items) { index, item ->
-            rowContent(index, item)
+    val loadMore = remember {
+        derivedStateOf {
+            val layoutInfo = listState.layoutInfo
+            val totalItemsNumber = layoutInfo.totalItemsCount
+            val lastVisibleItemIndex = (layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0) + 1
+
+            lastVisibleItemIndex > (totalItemsNumber - buffer)
         }
     }
-    if (listState.shouldLoadMore(firstVisibleIndex)) {
-        loadMore()
-    }
-}
 
-fun LazyListState.shouldLoadMore(rememberedIndex: MutableState<Int>): Boolean {
-    val firstVisibleIndex = this.firstVisibleItemIndex
-    if (rememberedIndex.value != firstVisibleIndex) {
-        rememberedIndex.value = firstVisibleIndex
-        return layoutInfo.visibleItemsInfo.lastOrNull()?.index == layoutInfo.totalItemsCount - 1
+    LaunchedEffect(loadMore) {
+        snapshotFlow { loadMore.value }
+            .distinctUntilChanged()
+            .collect {
+                onLoadMore()
+            }
     }
-    return false
 }
 
 @Composable
