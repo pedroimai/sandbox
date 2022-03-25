@@ -14,12 +14,11 @@ import javax.inject.Inject
 class ComicsViewModel @Inject constructor(private val repository: ComicsRepository) :
     ViewModel() {
 
-    private val _uiState = MutableStateFlow<Result<ComicsPayload.Comics>>(
-        Result.success(
-            ComicsPayload.Comics(listOf())
-        )
+    private val _uiState = MutableStateFlow(
+        ComicsUiState()
     )
-    val uiState: StateFlow<Result<ComicsPayload.Comics>> = _uiState
+
+    val uiState: StateFlow<ComicsUiState> = _uiState
 
     init {
         fetchOrRetry()
@@ -27,9 +26,31 @@ class ComicsViewModel @Inject constructor(private val repository: ComicsReposito
 
     fun fetchOrRetry() {
         viewModelScope.launch {
-            repository.getComics().collect { result ->
-                _uiState.value = result
-            }
+            repository.getComics(uiState.value.currentPage)
+                .collect { uiState ->
+                    _uiState.value = reduce(uiState, _uiState)
+                }
         }
     }
+
+    private fun reduce(
+        result: Result<List<ComicsPayload.Comics.ComicModel>>,
+        uiState: MutableStateFlow<ComicsUiState>
+    ): ComicsUiState =
+        when (result) {
+            is Result.Success -> uiState.value.copy(
+                items = uiState.value.items.apply { addAll(result.data) },
+                currentPage = uiState.value.currentPage + 1,
+                loading = false,
+                error = null
+            )
+            is Result.Loading -> uiState.value.copy(
+                loading = true,
+                error = null
+            )
+            is Result.Failed -> uiState.value.copy(
+                loading = false,
+                error = result.error
+            )
+        }
 }

@@ -9,13 +9,13 @@ import javax.inject.Inject
 class ComicsRepository @Inject constructor() {
     private val marvelApi = MarvelApi.Impl() //todo inject marvelApi
 
-    fun getComics(): Flow<Result<ComicsPayload.Comics>> = flow {
+    fun getComics(page: Int): Flow<Result<List<ComicsPayload.Comics.ComicModel>>> = flow {
         emit(
-            Result.success(marvelApi.getComics().data) as Result<ComicsPayload.Comics>
+            Result.success(marvelApi.getComics(page).data.comics) as Result<List<ComicsPayload.Comics.ComicModel>>
         )
     }.onStart {
-        emit(Result.loading<ComicsPayload.Comics>() as Result<ComicsPayload.Comics>)
+        emit(Result.loading())
     }.catch { exception ->
-        emit(Result.failed<ComicsPayload.Comics>(exception) as Result<ComicsPayload.Comics>)
+        emit(Result.failed(exception))
     }.flowOn(Dispatchers.IO)
 }

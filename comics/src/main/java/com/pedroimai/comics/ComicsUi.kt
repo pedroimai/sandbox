@@ -1,14 +1,14 @@
 package com.pedroimai.comics
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -25,39 +25,83 @@ data class ComicsScreenModel(val comics: ComicsPayload.Comics)
 @Composable
 fun ComicsScreen(viewModel: ComicsViewModel) {
     val viewState by rememberFlowWithLifecycle(viewModel.uiState)
-        .collectAsState(initial = Result.loading())
+        .collectAsState(initial = ComicsUiState())
 
-    when (viewState) {
-        is Result.Loading -> Loading()
-        is Result.Failed -> ErrorScreen(onClick = { viewModel.fetchOrRetry() })
-        is Result.Success -> ComicsList((viewState as Result.Success<ComicsPayload.Comics>).data)
+    when {
+        viewState.loading && viewState.items.isNullOrEmpty() -> Loading()
+        //viewState.loading -> ComicsList(viewModel, viewState.items, true)
+        viewState.error != null -> ErrorScreen(onClick = { viewModel.fetchOrRetry() })
+        viewState.items.isNullOrEmpty().not() -> ComicsList(viewModel, viewState.items, false)
     }
 }
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ComicsList(list: ComicsPayload.Comics) {
+fun ComicsList(
+    viewModel: ComicsViewModel,
+    list: MutableList<ComicsPayload.Comics.ComicModel>,
+    isLoading: Boolean
+) {
     val context = LocalContext.current
 
-    return LazyColumn(Modifier.fillMaxWidth()) {
-        items(items = list.comics) { comic ->
-            Surface(onClick = {
-                Toast.makeText(
-                    context,
-                    "${comic.name} clicked",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }) {
-                Text(
-                    modifier = Modifier
-                        .padding(horizontal = 8.dp, vertical = 16.dp)
-                        .fillMaxWidth(),
-                    fontSize = 16.sp,
-                    text = comic.name
-                )
-            }
+    return InfiniteLoadingList(
+        modifier = Modifier.fillMaxWidth(),
+        items = list,
+        loadMore = {
+            Log.d("pedroca","loading next page")
+            viewModel.fetchOrRetry()
+        },
+    ) { _, item ->
+        val comics = item as ComicsPayload.Comics.ComicModel
+        Surface(onClick = {
+            Toast.makeText(
+                context,
+                "${comics.name} clicked",
+                Toast.LENGTH_SHORT
+            ).show()
+        }) {
+            Text(
+                modifier = Modifier
+                    .padding(horizontal = 8.dp, vertical = 16.dp)
+                    .fillMaxWidth(),
+                fontSize = 16.sp,
+                text = comics.name
+            )
+        }
+
+        if (isLoading) {
+            CircularProgressIndicator()
         }
     }
+}
+
+
+@Composable
+fun InfiniteLoadingList(
+    modifier: Modifier,
+    items: List<Any>,
+    loadMore: () -> Unit,
+    rowContent: @Composable (Int, Any) -> Unit
+) {
+    val listState = rememberLazyListState()
+    val firstVisibleIndex = remember { mutableStateOf(listState.firstVisibleItemIndex) }
+    LazyColumn(state = listState, modifier = modifier) {
+        itemsIndexed(items) { index, item ->
+            rowContent(index, item)
+        }
+    }
+    if (listState.shouldLoadMore(firstVisibleIndex)) {
+        loadMore()
+    }
+}
+
+fun LazyListState.shouldLoadMore(rememberedIndex: MutableState<Int>): Boolean {
+    val firstVisibleIndex = this.firstVisibleItemIndex
+    if (rememberedIndex.value != firstVisibleIndex) {
+        rememberedIndex.value = firstVisibleIndex
+        return layoutInfo.visibleItemsInfo.lastOrNull()?.index == layoutInfo.totalItemsCount - 1
+    }
+    return false
 }
 
 @Composable

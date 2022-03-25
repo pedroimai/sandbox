@@ -16,15 +16,16 @@ import kotlinx.serialization.json.Json
 const val pageSize = 20
 
 interface MarvelApi {
-    suspend fun getComics(): ComicsPayload
+    suspend fun getComics(page: Int): ComicsPayload
     suspend fun getCharacters(): CharactersPayload
 
 
     class Impl : MarvelApi {
-        override suspend fun getComics(): ComicsPayload =
+        override suspend fun getComics(page: Int): ComicsPayload =
             client.get {
                 marvel("comics")
                 parameter("limit", pageSize)
+                parameter("offset", page * pageSize)
             }
 
         override suspend fun getCharacters(): CharactersPayload =
