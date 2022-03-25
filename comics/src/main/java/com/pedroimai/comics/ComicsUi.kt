@@ -1,5 +1,6 @@
 package com.pedroimai.comics
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -44,7 +45,7 @@ fun ComicsScreen(viewModel: ComicsViewModel) {
 @ExperimentalMaterialApi
 @Composable
 fun ComicsList(
-    listItems: List<ComicsPayload.Comics.ComicModel>,
+    listItems: List<ComicsListItem>,
     onLoadMore: () -> Unit
 ) {
     val listState = rememberLazyListState()
@@ -54,27 +55,38 @@ fun ComicsList(
         state = listState
     ) {
         items(items = listItems) { comics ->
-            Surface(onClick = {
-                Toast.makeText(
-                    context,
-                    "${comics.name} clicked",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }) {
-                Text(
-                    modifier = Modifier
-                        .padding(horizontal = 8.dp, vertical = 16.dp)
-                        .fillMaxWidth(),
-                    fontSize = 16.sp,
-                    text = comics.name,
-                )
+            when (comics) {
+                is ComicsListItem.Comics -> ComicsListItemColumn(context, comics)
+                is ComicsListItem.Loading -> Loading()
             }
-
         }
     }
 
     InfiniteListHandler(listState = listState) {
         onLoadMore()
+    }
+}
+
+@ExperimentalMaterialApi
+@Composable
+private fun ComicsListItemColumn(
+    context: Context,
+    comics: ComicsListItem.Comics
+) {
+    Surface(onClick = {
+        Toast.makeText(
+            context,
+            "${comics.title} clicked",
+            Toast.LENGTH_SHORT
+        ).show()
+    }) {
+        Text(
+            modifier = Modifier
+                .padding(horizontal = 8.dp, vertical = 16.dp)
+                .fillMaxWidth(),
+            fontSize = 16.sp,
+            text = comics.title,
+        )
     }
 }
 

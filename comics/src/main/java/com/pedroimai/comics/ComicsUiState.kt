@@ -1,10 +1,13 @@
 package com.pedroimai.comics
 
-import com.pedroimai.shared.domain.ComicsPayload
-
 data class ComicsUiState(
-    val items: MutableList<ComicsPayload.Comics.ComicModel> = mutableListOf(),
+    val items: MutableList<ComicsListItem> = mutableListOf(),
     val currentPage: Int = 0,
     val loading: Boolean = true,
     val error: Throwable? = null
 )
+
+sealed class ComicsListItem {
+    data class Comics(val id: String, val title: String) : ComicsListItem()
+    object Loading : ComicsListItem()
+}

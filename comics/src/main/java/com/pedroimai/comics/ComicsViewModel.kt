@@ -2,7 +2,6 @@ package com.pedroimai.comics
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.pedroimai.shared.domain.ComicsPayload
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -11,7 +10,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ComicsViewModel @Inject constructor(private val repository: ComicsRepository) :
+class ComicsViewModel @Inject constructor(
+    private val repository: ComicsRepository,
+    private val viewStateMapper: ComicsViewStateMapper
+) :
     ViewModel() {
 
     private val _uiState = MutableStateFlow(
@@ -34,12 +36,12 @@ class ComicsViewModel @Inject constructor(private val repository: ComicsReposito
     }
 
     private fun reduce(
-        result: Result<List<ComicsPayload.Comics.ComicModel>>,
+        result: Result<List<ComicsModel>>,
         uiState: MutableStateFlow<ComicsUiState>
     ): ComicsUiState =
         when (result) {
             is Result.Success -> uiState.value.copy(
-                items = uiState.value.items.apply { addAll(result.data) },
+                items = uiState.value.items.apply { addAll(viewStateMapper(result.data)) },
                 currentPage = uiState.value.currentPage + 1,
                 loading = false,
                 error = null
