@@ -9,5 +9,4 @@ data class ComicsUiState(
 
 sealed class ComicsListItem {
     data class Comics(val id: String, val title: String) : ComicsListItem()
-    object Loading : ComicsListItem()
 }

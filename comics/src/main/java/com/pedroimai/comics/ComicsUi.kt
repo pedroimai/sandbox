@@ -5,7 +5,7 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -31,12 +31,9 @@ fun ComicsScreen(viewModel: ComicsViewModel) {
         .collectAsState(initial = ComicsUiState())
 
     when {
-        viewState.loading && viewState.items.isNullOrEmpty() -> Loading()
-        //viewState.loading -> ComicsList(viewModel, viewState.items, true)
+        viewState.loading && viewState.items.isEmpty() -> Loading()
         viewState.error != null -> ErrorScreen(onClick = { viewModel.fetchOrRetry() })
-        viewState.items.isNullOrEmpty().not() -> ComicsList(
-            viewState.items
-        ) {
+        viewState.items.isEmpty().not() -> ComicsList(viewState.items) {
             viewModel.fetchOrRetry()
         }
     }
@@ -54,10 +51,14 @@ fun ComicsList(
     LazyColumn(
         state = listState
     ) {
-        items(items = listItems) { comics ->
+        itemsIndexed(items = listItems) { index, comics ->
             when (comics) {
                 is ComicsListItem.Comics -> ComicsListItemColumn(context, comics)
                 is ComicsListItem.Loading -> Loading()
+            }
+
+            if (index == listItems.size - 1) {
+                Loading()
             }
         }
     }
