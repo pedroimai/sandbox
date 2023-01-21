@@ -33,6 +33,7 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.1.1"
     }
+    namespace = "com.pedroimai.comics"
 }
 
 dependencies {

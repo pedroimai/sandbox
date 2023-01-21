@@ -77,4 +77,5 @@ android {
         minSdk = 22
         targetSdk = 30
     }
+    namespace = "com.pedroimai.shared"
 }

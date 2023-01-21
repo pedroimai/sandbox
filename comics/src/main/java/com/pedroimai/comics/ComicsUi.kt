@@ -54,7 +54,7 @@ fun ComicsList(
         itemsIndexed(items = listItems) { index, comics ->
             when (comics) {
                 is ComicsListItem.Comics -> ComicsListItemColumn(context, comics)
-                is ComicsListItem.Loading -> Loading()
+                //is ComicsListItem.Loading -> Loading()
             }
 
             if (index == listItems.size - 1) {
