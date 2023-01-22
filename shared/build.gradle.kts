@@ -29,13 +29,15 @@ kotlin {
         summary = "Shared module for Sandbox project"
         homepage = ""
         ios.deploymentTarget = "14.1"
-        frameworkName = "shared"
+        framework {
+            baseName = "shared"
+        }
         // set path to your ios project podfile, e.g. podfile = project.file("../iosApp/Podfile")
     }
 
     sourceSets {
-        val commonMain by getting{
-            dependencies{
+        val commonMain by getting {
+            dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:$serializationVersion")
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
@@ -50,19 +52,19 @@ kotlin {
                 implementation(kotlin("test-annotations-common"))
             }
         }
-        val androidMain by getting{
-            dependencies{
+        val androidMain by getting {
+            dependencies {
                 implementation("io.ktor:ktor-client-android:$ktorVersion")
             }
         }
-        val androidTest by getting {
+//        val androidTest by getting {
+//            dependencies {
+//                implementation(kotlin("test-junit"))
+//                implementation("junit:junit:4.13.2")
+//            }
+//        }
+        val iosMain by getting {
             dependencies {
-                implementation(kotlin("test-junit"))
-                implementation("junit:junit:4.13.2")
-            }
-        }
-        val iosMain by getting{
-            dependencies{
                 implementation("io.ktor:ktor-client-ios:$ktorVersion")
             }
         }
@@ -71,11 +73,11 @@ kotlin {
 }
 
 android {
-    compileSdk = 30
+    compileSdk = 33
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     defaultConfig {
         minSdk = 22
-        targetSdk = 30
+        targetSdk = 33
     }
     namespace = "com.pedroimai.shared"
 }

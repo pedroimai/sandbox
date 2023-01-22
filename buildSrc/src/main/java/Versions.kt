@@ -1,7 +1,7 @@
 object Versions {
-    const val gradleplugin = "7.1.2"
+    const val gradleplugin = "7.4.0"
     const val depversions = "0.42.0"
-    const val kotlin = "1.6.10"
+    const val kotlin = "1.7.20"
     const val appcompat = "1.4.1"
     const val material = "1.5.0"
     const val constraintlayout = "2.1.3"

@@ -1,8 +1,8 @@
 object Env {
-    const val compileSdkVersion = 31
-    const val buildToolsVersion = "31.0.0"
+    const val compileSdkVersion = 33
+    const val buildToolsVersion = "33.0.1"
     const val minSdkVersion = 22
-    const val targetSdkVersion = 31
+    const val targetSdkVersion = 33
 
     object Build {
         private const val major = 1
